@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Biyo Settings</title>
+    <style>
+      body {
+        width: 350px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 14px;
+        padding: 15px;
+      }
+      h1 {
+        font-size: 18px;
+        margin-top: 0;
+        color: #42b883; /* Vue.js green */
+      }
+      label {
+        display: block;
+        margin-top: 12px;
+        font-weight: 500;
+      }
+      input[type='text'],
+      select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 4px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      input[type='checkbox'] {
+        margin-top: 4px;
+      }
+      .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      button {
+        background-color: #42b883; /* Vue.js green */
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        margin-top: 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      button:hover {
+        background-color: #33a06f;
+      }
+      .setting-group {
+        margin-bottom: 10px;
+      }
+      .container-settings {
+        padding-left: 15px;
+        border-left: 2px solid #eee;
+        margin-top: 8px;
+      }
+      .status {
+        margin-top: 10px;
+        padding: 8px;
+        border-radius: 4px;
+        display: none;
+      }
+      .status.success {
+        background-color: #e3f2fd;
+        color: #1565c0;
+        display: block;
+      }
+      .status.error {
+        background-color: #ffebee;
+        color: #c62828;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Biyo Settings</h1>
+
+    <form id="settings-form">
+      <div class="setting-group">
+        <label for="viteUrl">Vite Server URL</label>
+        <input type="text" id="viteUrl" placeholder="http://localhost:5173" />
+      </div>
+
+      <div class="setting-group">
+        <label for="targetSelector">Target Element Selector</label>
+        <input type="text" id="targetSelector" placeholder=".some-class" />
+      </div>
+
+      <div class="setting-group">
+        <label for="mountStrategy">Mounting Strategy</label>
+        <select id="mountStrategy">
+          <option value="before">Before Element</option>
+          <option value="append">Append Inside</option>
+          <option value="prepend">Prepend Inside</option>
+          <option value="replace">Replace Contents</option>
+        </select>
+      </div>
+
+      <button type="submit" id="save-button">Save Settings</button>
+    </form>
+
+    <div id="status" class="status"></div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
