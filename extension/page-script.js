@@ -10,7 +10,8 @@ const MESSAGE_SOURCE = 'biyo-page'
 const defaultSettings = {
   targetSelector: 'body',
   mountStrategy: 'prepend',
-  viteUrl: 'http://localhost:5173'
+  viteUrl: 'http://localhost:5173',
+  enabled: true
 }
 
 const settingsManager = {
@@ -217,6 +218,16 @@ const initApp = async () => {
   isHandlingMutation = true // Prevent observer from triggering during initialization
 
   const settings = settingsManager.get()
+
+  // Check if the extension is enabled, if not, clean up and return
+  if (settings.enabled === false) {
+    console.log('[biyo] Biyo is disabled via settings')
+    cleanupApp()
+    isInitializing = false
+    isHandlingMutation = false
+    return
+  }
+
   const targetElement = document.querySelector(settings.targetSelector)
 
   if (!targetElement) {

@@ -26,6 +26,7 @@ Biyo is a browser extension for rapid prototyping that allows you to inject Vue.
 1. Have your Vue or React app running with Vite (typically at `http://localhost:5173`)
 2. Click the Biyo icon in your browser toolbar
 3. Configure the injection:
+   - **Enable/Disable Toggle**: Quickly enable or disable the injection without removing the extension
    - **Target Element**: CSS selector for where to inject (e.g., `#sidebar`, `.content`)
    - **Mount Strategy**: How to inject your app:
      - `before`: Insert before the target
@@ -36,6 +37,8 @@ Biyo is a browser extension for rapid prototyping that allows you to inject Vue.
 4. Click "Save" and your app will be injected!
 
 > **Auto-Injection**: Once configured, Biyo will automatically inject your app whenever you visit a page where the target element exists, as long as the extension is active and your Vite server is running. No need to click the icon each time!
+
+> **Quick Toggle**: You can quickly enable or disable Biyo injection using the toggle switch without losing your settings. Changes to the toggle take effect immediately.
 
 ## Framework Detection and Required Mounting Methods
 

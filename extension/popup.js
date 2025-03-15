@@ -2,7 +2,8 @@
 const defaultSettings = {
   targetSelector: 'body',
   mountStrategy: 'prepend',
-  viteUrl: 'http://localhost:5173'
+  viteUrl: 'http://localhost:5173',
+  enabled: true
 }
 
 // Chrome runtime utilities
@@ -68,7 +69,8 @@ const formHandler = {
     return {
       targetSelector,
       mountStrategy: document.getElementById('mountStrategy').value,
-      viteUrl
+      viteUrl,
+      enabled: document.getElementById('enableBiyo').checked
     }
   },
 
@@ -82,6 +84,7 @@ const formHandler = {
     if (settings.viteUrl) {
       document.getElementById('viteUrl').value = settings.viteUrl
     }
+    document.getElementById('enableBiyo').checked = settings.enabled !== false
   }
 }
 
@@ -165,6 +168,26 @@ document.addEventListener('DOMContentLoaded', async () => {
       await contentScript.connect(tabId)
       await contentScript.saveSettings(tabId, settings)
       statusHandler.show('Settings saved successfully!')
+    } catch (error) {
+      statusHandler.show(`Error: ${error.message}`, true)
+    }
+  })
+
+  // Add listener for the enable/disable toggle to apply changes immediately
+  document.getElementById('enableBiyo').addEventListener('change', async e => {
+    try {
+      const tabId = await chromeRuntime.queryTabs()
+      await contentScript.connect(tabId)
+      const currentSettings = await contentScript.getSettings(tabId)
+
+      // Update only the enabled setting
+      const updatedSettings = {
+        ...currentSettings,
+        enabled: e.target.checked
+      }
+
+      await contentScript.saveSettings(tabId, updatedSettings)
+      statusHandler.show(`Biyo ${e.target.checked ? 'enabled' : 'disabled'} successfully!`)
     } catch (error) {
       statusHandler.show(`Error: ${error.message}`, true)
     }
