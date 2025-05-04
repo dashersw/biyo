@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Biyo",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Biyo is a browser extension for rapid prototyping that allows you to inject Vue.js or React applications into any existing webpage.",
   "permissions": ["activeTab", "scripting"],
   "icons": {
