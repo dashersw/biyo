@@ -11,7 +11,7 @@ const defaultSettings = {
   targetSelector: 'body',
   mountStrategy: 'prepend',
   viteUrl: 'http://localhost:5173',
-  enabled: true
+  enabled: false
 }
 
 const settingsManager = {

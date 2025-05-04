@@ -3,7 +3,21 @@ const defaultSettings = {
   targetSelector: 'body',
   mountStrategy: 'prepend',
   viteUrl: 'http://localhost:5173',
-  enabled: true
+  enabled: false
+}
+
+// Cache for last known settings
+let cachedSettings = null
+
+// Try to read cached settings from storage
+try {
+  const storedCache = localStorage.getItem('biyoCachedSettings')
+  if (storedCache) {
+    cachedSettings = JSON.parse(storedCache)
+  }
+} catch (error) {
+  // Ignore cache loading errors
+  console.warn('[biyo] Error loading cached settings', error)
 }
 
 // Chrome runtime utilities
@@ -134,12 +148,25 @@ const contentScript = {
     ])
 
     if (response?.success) {
+      // Cache the settings
+      try {
+        localStorage.setItem('biyoCachedSettings', JSON.stringify(response.settings || defaultSettings))
+      } catch (error) {
+        console.warn('[biyo] Error caching settings', error)
+      }
       return response.settings || defaultSettings
     }
     throw new Error(response?.error || 'Failed to get settings')
   },
 
   async saveSettings(tabId, settings) {
+    // Update cache immediately
+    try {
+      localStorage.setItem('biyoCachedSettings', JSON.stringify(settings))
+    } catch (error) {
+      console.warn('[biyo] Error caching settings', error)
+    }
+
     const response = await Promise.race([
       chromeRuntime.sendMessage(tabId, { type: 'SAVE_SETTINGS', settings }),
       new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout saving settings')), 1000))
@@ -193,14 +220,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   })
 
-  // Load initial settings
+  // Immediately show cached or default settings
+  formHandler.setFormValues(cachedSettings || defaultSettings)
+
+  // Then load actual settings in the background
   try {
     const tabId = await chromeRuntime.queryTabs()
-    await contentScript.connect(tabId)
     const settings = await contentScript.getSettings(tabId)
     formHandler.setFormValues(settings)
   } catch (error) {
-    statusHandler.show(`Error: ${error.message}`, true)
-    formHandler.setFormValues(defaultSettings)
+    console.warn('[biyo] Error loading settings:', error)
+    // Don't show error to user since we already have default/cached settings displayed
   }
 })
